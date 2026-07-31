@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  # Наша локальная база данных PostgreSQL
+  postgres_db:
+    image: postgres:15-alpine
+    container_name: wb_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: mysecretpassword
+      POSTGRES_DB: wb_analytics
+    ports:
+      - "8432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  # Контейнер с dbt для удобного запуска команд
+  dbt:
+    image: ghcr.io/dbt-labs/dbt-postgres:1.5.0
+    container_name: wb_dbt
+    profiles: [ "dbt-only" ] # Запускаем по требованию
+    volumes:
+      - ./dbt_project:/usr/app/dbt
+    environment:
+      DBT_PROFILES_DIR: /usr/app/dbt
+    ports:
+      - "8085:8085"
+    depends_on:
+      - postgres_db
+    working_dir: /usr/app/dbt
+
+volumes:
+  pgdata:
