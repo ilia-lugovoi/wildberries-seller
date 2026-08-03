@@ -1,13 +1,13 @@
-from pathlib import Path
-
 import pandas as pd
+from pathlib import Path
+from ingestion.utils.logger import logger
 
-
-def read_csv(path: Path) -> pd.DataFrame:
-    r'C:\Users\ilyal\Documents\Dosc\projects\wildberries-seller\raw_sources\Orders.csv';
-    r'C:\Users\ilyal\Documents\Dosc\projects\wildberries-seller\raw_sources\Sales.csv';
-    r'C:\Users\ilyal\Documents\Dosc\projects\wildberries-seller\raw_sources\Stock.csv';
-    r'C:\Users\ilyal\Documents\Dosc\projects\wildberries-seller\raw_sources\Supplies.csv';
-    r'C:\Users\ilyal\Documents\Dosc\projects\wildberries-seller\raw_sources\SalesReport.csv'
-
-    return pd.read_csv(path)
+def read_csv_file(file_path: Path) -> pd.DataFrame:
+    try:
+        logger.info(f"Чтение CSV файла: {file_path}")
+        # sep=None авто-определяет разделитель (запятая, точка с запятой, табуляция)
+        df = pd.read_csv(file_path, sep=None, engine="python", encoding="utf-8")
+        return df
+    except Exception as e:
+        logger.error(f"Ошибка при чтении {file_path}: {e}")
+        raise
