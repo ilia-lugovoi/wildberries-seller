@@ -9,7 +9,9 @@ WB API
 Справочники селлера
 
 ## Architecture
-01_project_setup -> 02_ingestion -> 03_postgres_raw -> 04_dbt_staging -> 05_dbt_intermediate -> 06_dbt_marts -> 07_power_bi -> 08_superset
+01_project_setup -> 02_ingestion -> 03_postgres_raw -> 04_dbt_staging
+
+-> 05_dbt_intermediate -> 06_dbt_marts -> 07_power_bi -> 08_superset
 
 ## Dashboards
 **1. Операционный отчет по заказам и продажам**
