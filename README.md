@@ -2,34 +2,14 @@
 
 Modern Analytics Engineering project.
 
-Python
-↓
-PostgreSQL
-↓
-dbt
-↓
-Power BI / Apache Superset
+Python -> PostgreSQL -> dbt -> Power BI / Apache Superset
 
 ## Sources
 WB API
 Справочники селлера
 
 ## Architecture
-01_project_setup
-        ↓
-02_ingestion
-        ↓
-03_postgres_raw
-        ↓
-04_dbt_staging
-        ↓
-05_dbt_intermediate
-        ↓
-06_dbt_marts
-        ↓
-07_power_bi
-        ↓
-08_superset
+01_project_setup -> 02_ingestion -> 03_postgres_raw -> 04_dbt_staging -> 05_dbt_intermediate -> 06_dbt_marts -> 07_power_bi -> 08_superset
 
 ## Dashboards
 1. Операционный отчет по заказам и продажам
@@ -43,6 +23,3 @@ WB API
 
 4. Финансовый P&L-отчет
 Цель: ежемесячно проверять финансовые результаты
-
-## Tech Stack
--
