@@ -5,8 +5,7 @@ Modern Analytics Engineering project.
 Python -> PostgreSQL -> dbt -> Power BI / Apache Superset
 
 ## Sources
-WB API
-Справочники селлера
+WB API и справочники селлера
 
 ## Architecture
 01_project_setup -> 02_ingestion -> 03_postgres_raw -> 04_dbt_staging
