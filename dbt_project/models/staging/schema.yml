@@ -1,0 +1,46 @@
+version: 2
+
+models:
+
+  - name: stg_nomenclature
+    description: >
+      Staging-слой справочника номенклатуры WB.
+      В справочнике должно находиться 567 товарных записей.
+
+    columns:
+
+      - name: supplierarticle
+        description: "Артикул продавца."
+
+      - name: barcode
+        description: >
+          Штрихкод товара.
+          В исходных данных присутствует одна запись без barcode.
+        
+        tests:
+          - unique
+
+  - name: stg_cost_price
+    description: >
+      Staging-слой справочника себестоимости.
+      Содержит 567 записей.
+
+    columns:
+
+      - name: barcode
+        description: "Штрихкод товара."
+        tests:
+          - not_null
+          - unique
+
+      - name: cost_price
+        description: "Себестоимость товара."
+
+  - name: stg_tariffs_delivery
+    description: >
+      Staging-слой тарифов доставки.
+
+    columns:
+
+      - name: subject
+        description: "Предмет товара."

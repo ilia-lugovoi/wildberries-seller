@@ -1,0 +1,41 @@
+version: 2
+
+sources:
+  - name: raw
+    schema: raw
+    description: >
+      Raw-слой проекта Wildberries.
+      Данные загружаются ingestion-процессом
+      без бизнес-трансформаций.
+
+    tables:
+
+      - name: orders
+        description: "Выгрузка заказов из WB API."
+
+      - name: sales
+        description: "Выгрузка продаж из WB API."
+
+      - name: report
+        description: "Отчёт реализации из WB API."
+
+      - name: stock
+        description: "Выгрузка остатков из WB API."
+
+      - name: supplies
+        description: "Выгрузка поставок из WB API."
+
+      - name: nomenclature
+        description: >
+          Справочник товаров.
+          Содержит 567 товарных записей.
+
+      - name: cost_price
+        description: >
+          Справочник себестоимости товаров.
+          Содержит 567 записей с уникальными barcode.
+
+      - name: tariffs_delivery
+        description: >
+          Справочник тарифов доставки.
+          Содержит 25 уникальных subjects.

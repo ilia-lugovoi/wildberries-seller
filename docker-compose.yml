@@ -24,8 +24,6 @@ services:
       - ./dbt_project:/usr/app/dbt
     environment:
       DBT_PROFILES_DIR: /usr/app/dbt
-    ports:
-      - "8085:8085"
     depends_on:
       - postgres_db
     working_dir: /usr/app/dbt

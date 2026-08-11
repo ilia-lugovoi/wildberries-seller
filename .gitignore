@@ -7,15 +7,14 @@ venv/
 
 # Environment
 .env
-.env.example
 
 # Jupyter
 .ipynb_checkpoints/
 
 # dbt
-dbt/target/
-dbt/logs/
-dbt/dbt_packages/
+dbt_project/target/
+dbt_project/logs/
+dbt_project/dbt_packages/
 
 # IDE
 .vscode/

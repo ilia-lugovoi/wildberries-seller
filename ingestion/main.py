@@ -9,15 +9,15 @@ DATA_DIR = Path(__file__).resolve().parent.parent / "raw_sources"
 
 FILES_MAP = {
     # CSV
-    "orders.csv": ("stg_orders", "csv"),
-    "sales.csv": ("stg_sales", "csv"),
-    "sales_report.csv": ("stg_sales_report", "csv"),
-    "stock.csv": ("stg_stock", "csv"),
-    "supplies.csv": ("stg_supplies", "csv"),
+    "orders.csv": ("orders", "csv"),
+    "sales.csv": ("sales", "csv"),
+    "sales_report.csv": ("report", "csv"),
+    "stock.csv": ("stock", "csv"),
+    "supplies.csv": ("supplies", "csv"),
     # Excel
-    "cost_price.xlsx": ("stg_cost_price", "excel"),
-    "nomenclature.xlsx": ("stg_nomenclature", "excel"),
-    "tariffs_delivery.xlsx": ("stg_tariffs_delivery", "excel"),
+    "cost_price.xlsx": ("cost_price", "excel"),
+    "nomenclature.xlsx": ("nomenclature", "excel"),
+    "tariffs_delivery.xlsx": ("tariffs_delivery", "excel"),
 }
 
 def run_ingestion():

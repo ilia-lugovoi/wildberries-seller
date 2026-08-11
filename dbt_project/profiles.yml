@@ -1,0 +1,13 @@
+wb_analytics:
+  target: dev
+
+  outputs:
+    dev:
+      type: postgres
+      host: postgres_db
+      user: postgres
+      password: mysecretpassword
+      port: 5432
+      dbname: wb_analytics
+      schema: public
+      threads: 4
