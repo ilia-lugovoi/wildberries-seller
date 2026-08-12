@@ -21,6 +21,15 @@ class PostgresLoader:
     ) -> None:
         try:
             logger.info(f"Загрузка {len(df)} строк в {schema}.{table_name}...")
+
+            # 1. Если запрашивается "replace", каскадно удаляем таблицу средствами SQLAlchemy
+            if if_exists == "replace":
+                with self.engine.begin() as conn:
+                    conn.execute(
+                        text(f'DROP TABLE IF EXISTS "{schema}"."{table_name}" CASCADE;')
+                    )
+
+            # 2. Передаем управление в Pandas
             df.to_sql(
                 name=table_name,
                 con=self.engine,

@@ -4,7 +4,7 @@
     
   as (
     select
-    supplierarticle,
+    supplierarticle as supplier_article,
     subject,
     category,
     brand,
@@ -14,10 +14,10 @@
         else barcode::text
     end as barcode,
 
-    размер,
-    рекомендуемая_цена,
-    цвет,
-    страна_производства
+    размер as size,
+    рекомендуемая_цена as rec_price,
+    цвет as color,
+    страна_производства as orig_country
 
 from "wb_analytics"."raw"."nomenclature"
   );

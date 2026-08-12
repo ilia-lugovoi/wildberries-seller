@@ -4,6 +4,8 @@ from ingestion.extract.excel_reader import read_excel_file
 from ingestion.transform.column_names import rename_columns
 from ingestion.load.postgres import PostgresLoader
 from ingestion.utils.logger import logger
+from ingestion.config.settings import RAW_SCHEMA
+from ingestion.transform.validation import validate_dataframe
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "raw_sources"
 
@@ -18,6 +20,56 @@ FILES_MAP = {
     "cost_price.xlsx": ("cost_price", "excel"),
     "nomenclature.xlsx": ("nomenclature", "excel"),
     "tariffs_delivery.xlsx": ("tariffs_delivery", "excel"),
+}
+
+REQUIRED_COLUMNS = {
+    "orders": [
+        "id",
+        "date",
+        "lastchangedate",
+        "supplierarticle",
+        "barcode",
+        "totalprice",
+        "discountpercent",
+        "nmid",
+        "subject",
+        "category",
+        "brand",
+        "iscancel",
+    ],
+
+    "sales": [
+        "id",
+        "date",
+        "lastchangedate",
+        "supplierarticle",
+        "barcode",
+        "totalprice",
+        "discountpercent",
+        "saleid",
+        "nmid",
+        "subject",
+        "category",
+        "brand",
+        "srid",
+    ],
+
+    "cost_price": [
+        "штрих_код",
+        "себестоимость",
+    ],
+
+    "nomenclature": [
+        "supplierarticle",
+        "subject",
+        "category",
+        "brand",
+        "barcode",
+    ],
+
+    "tariffs_delivery": [
+        "subject",
+    ],
 }
 
 def run_ingestion():
@@ -38,8 +90,17 @@ def run_ingestion():
         # Очищаем колонки
         df = rename_columns(df)
 
+        # Валидируем данные
+        required_columns = REQUIRED_COLUMNS.get(table_name, [])
+
+        validate_dataframe(
+            df=df,
+            table_name=table_name,
+            required_columns=required_columns,
+        )
+
         # Загружаем в БД
-        loader.load_dataframe(df, table_name=table_name, schema="raw")
+        loader.load_dataframe(df, table_name=table_name, schema=RAW_SCHEMA)
 
     logger.info("Ingestion процесс успешно завершен!")
 
