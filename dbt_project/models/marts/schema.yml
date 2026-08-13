@@ -1,0 +1,67 @@
+version: 2
+
+models:
+  - name: mart_sales_daily
+    description: >
+      Ежедневная аналитическая витрина по продажам.
+      Grain витрины: один товар, один день продажи и один регион.
+      Используется для операционного отчета по продажам.
+
+    columns:
+
+      - name: sale_date
+        description: "Дата продажи."
+
+      - name: barcode
+        description: "Штрих-код товара."
+
+      - name: region
+        description: "Регион продажи."
+
+      - name: sales_count
+        description: "Количество строк продаж."
+
+      - name: sales_quantity
+        description: "Количество проданных единиц с учетом возвратов."
+
+      - name: revenue
+        description: "Сумма фактических цен продажи клиенту."
+
+      - name: avg_sale_price
+        description: "Средняя сумма продажи на одну строку продажи."
+
+      - name: avg_unit_price
+        description: "Средняя сумма продажи на одну единицу товара."
+
+      - name: rec_price
+        description: "Рекомендованная цена товара из справочника номенклатуры."
+
+      - name: for_pay
+        description: "Выручка после вычета базовых комиссий."
+
+      - name: cost_price
+        description: "Себестоимость проданных товаров с учетом возвратов."
+
+      - name: gross_profit
+        description: "Валовая прибыль: for_pay минус себестоимость."
+
+      - name: supplier_article
+        description: "Артикул поставщика."
+
+      - name: subject
+        description: "Предмет товара."
+
+      - name: category
+        description: "Категория товара."
+
+      - name: brand
+        description: "Бренд товара."
+
+      - name: size
+        description: "Размер товара."
+
+      - name: color
+        description: "Цвет товара."
+
+      - name: orig_country
+        description: "Страна происхождения товара."
