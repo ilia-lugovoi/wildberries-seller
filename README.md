@@ -1,19 +1,19 @@
 # Wildberries Seller Analytics
-
 Modern Analytics Engineering project.
 
-Python -> PostgreSQL -> dbt -> Power BI / Apache Superset
+Python -> PostgreSQL -> dbt -> Power BI
 
 ## Sources
 WB API и справочники селлера
 
 ## Architecture
-01_project_setup -> 02_ingestion -> 03_postgres_raw -> 04_dbt_staging -> 05_dbt_intermediate -> 06_dbt_marts -> 07_power_bi -> 08_superset
+01_project_setup -> 02_ingestion -> 03_postgres_raw -> 04_dbt_staging
+-> 05_dbt_intermediate -> 06_dbt_marts -> 07_power_bi -> 08_superset
 
 ## Dashboards
-**1. Операционный отчет по заказам и продажам**
+**1. Операционный отчет по продажам**
 
-**Цель**: следить за ликвидностью и рентабельностью товаров
+**Цель**: мониторинг рентабельности продаж
 
 **2. Отчет по товарным остаткам и оборачиваемости**
 
@@ -23,6 +23,6 @@ WB API и справочники селлера
 
 **Цель**: следить за поставками
 
-**4. Финансовый P&L-отчет**
+**4. P&L-отчет**
 
 **Цель**: ежемесячно проверять финансовые результаты
