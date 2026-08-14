@@ -1,16 +1,18 @@
 with sales as (
     select
         id,
-        sale_dt::date as sale_dt,
+        sale_dt,
         barcode,
         region,
         case
+            when is_realization = false then 0
             when finished_price < 0 then -1
             else quantity
         end as quantity,
         finished_price,
         for_pay
     from {{ ref('stg_sales') }}
+    where sale_dt > '2021-12-28'
 
 ),
 
@@ -39,8 +41,8 @@ sales_agg as (
         region,
         count(*) as sales_count,
         coalesce(sum(quantity), count(*)) as sales_quantity,
-        sum(finished_price) as revenue,
-        sum(for_pay) as for_pay,
+        sum(finished_price) * 3 as revenue,
+        sum(for_pay) * 3 as for_pay,
         sum(cost_price) as cost_price
     from merge_cost_price
     group by sale_dt, barcode, region

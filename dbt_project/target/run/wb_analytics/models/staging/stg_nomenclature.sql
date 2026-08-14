@@ -15,7 +15,7 @@
     end as barcode,
 
     размер::text as size,
-    рекомендуемая_цена as rec_price,
+    рекомендуемая_цена::numeric as rec_price,
     цвет as color,
     страна_производства as orig_country
 
