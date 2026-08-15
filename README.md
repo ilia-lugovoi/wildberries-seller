@@ -15,9 +15,22 @@
 WB API и справочники селлера
 
 ## Архитектура
-01_project_setup -> 02_ingestion -> 03_postgres_raw -> 04_dbt_staging
+### ingestion
 
--> 05_dbt_intermediate -> 06_dbt_marts -> 07_power_bi
+1. extract: csv_reader и excel_reader
+2. transform: column_names и validation
+3. load: postgres
+
+- logger для записи INFO
+- settings для эффективности кода
+
+**Оркестрация ingestion**: main.py
+
+### dbt
+
+1. staging layer
+2. intermediate: группировка столбца номенклатуры
+3. marts: обработка, агрегация и соединение со справочниками продаж
 
 ## Dashboards
 ### 1. Операционный отчет по продажам
