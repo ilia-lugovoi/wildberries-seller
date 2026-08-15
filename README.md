@@ -1,12 +1,15 @@
 # Wildberries Seller Analytics
-Modern Analytics Engineering project.
+## Цели проекта
+1. Создать архитектуру, которая гарантирует корректную обработку данных из API и справочников для их дальнейшего анализа
+2. Создать четыре BI-отчета, которые напрямую помогут повысить KPI селлера
 
+## Технологии
 Python -> PostgreSQL -> dbt -> Power BI
 
-## Sources
+## Источники данных
 WB API и справочники селлера
 
-## Architecture
+## Архитектура
 01_project_setup -> 02_ingestion -> 03_postgres_raw -> 04_dbt_staging
 
 -> 05_dbt_intermediate -> 06_dbt_marts -> 07_power_bi
@@ -14,7 +17,7 @@ WB API и справочники селлера
 ## Dashboards
 ### 1. Операционный отчет по продажам
 
-**Цель**: мониторинг рентабельности продаж
+**Цель**: мониторинг и анализ маржинальности продаж
 
   <img width="1059" height="604" alt="операционный_отчет_продаж" src="screens/операционный_отчет_продаж.png" />
 
