@@ -4,7 +4,12 @@
 2. Создать четыре BI-отчета, которые напрямую помогут повысить KPI селлера
 
 ## Технологии
-Python -> PostgreSQL -> dbt -> Power BI
+- Python — ingestion и первичная валидация данных
+- PostgreSQL — хранение данных
+- dbt — staging, intermediate и marts
+- Power BI — визуализация и аналитика
+- Docker — локальное окружение
+- Git/GitHub — версионирование проекта
 
 ## Источники данных
 WB API и справочники селлера
