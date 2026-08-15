@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 
 # Определяем корень проекта и путь к .env
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
-ENV_PATH = PROJECT_ROOT / "ingestion" / ".env"
+ENV_PATH = PROJECT_ROOT / ".env"
 
 # Явно подгружаем .env из папки ingestion
 load_dotenv(dotenv_path=ENV_PATH)
