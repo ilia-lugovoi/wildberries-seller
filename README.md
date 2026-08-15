@@ -23,8 +23,7 @@ WB API и справочники селлера
 
 - logger для записи INFO
 - settings для эффективности кода
-
-**Оркестрация ingestion**: main.py
+- main.py - оркестрация ingestion
 
 ### dbt
 
