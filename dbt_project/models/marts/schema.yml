@@ -9,7 +9,7 @@ models:
 
     columns:
 
-      - name: sale_date
+      - name: sale_dt
         description: "Дата продажи."
 
       - name: barcode

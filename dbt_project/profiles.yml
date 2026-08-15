@@ -5,9 +5,9 @@ wb_analytics:
     dev:
       type: postgres
       host: postgres_db
-      user: postgres
-      password: mysecretpassword
+      user: "{{ env_var('DB_USER') }}"
+      password: "{{ env_var('DB_PASSWORD') }}"
       port: 5432
-      dbname: wb_analytics
+      dbname: "{{ env_var('DB_NAME') }}"
       schema: public
       threads: 4

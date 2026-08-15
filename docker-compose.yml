@@ -18,6 +18,8 @@ services:
     image: ghcr.io/dbt-labs/dbt-postgres:1.5.0
     container_name: wb_dbt
     profiles: [ "dbt-only" ] # Запускаем по требованию
+    env_file:
+      - .env # Передаст все переменные из .env внутрь контейнера
     volumes:
       - ./dbt_project:/usr/app/dbt
     environment:
