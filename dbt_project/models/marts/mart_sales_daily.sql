@@ -12,7 +12,7 @@ with sales as (
         finished_price,
         for_pay
     from {{ ref('stg_sales') }}
-    where sale_dt > '2021-12-28' # В этот день и месяц была проведена только одна и тестовая продажа с возвратом, а с января 22 года начались реальные продажи
+    where sale_dt > '2021-12-28' -- В этот день и месяц была проведена только одна и тестовая продажа с возвратом, а с января 22 года начались реальные продажи
 
 ),
 
@@ -41,8 +41,8 @@ sales_agg as (
         region,
         count(*) as sales_count,
         coalesce(sum(quantity), count(*)) as sales_quantity,
-        sum(finished_price) * 3 as revenue, # *3 - корректировка обезличенных данных
-        sum(for_pay) * 3 as for_pay, # *3 - корректировка обезличенных данных
+        sum(finished_price) * 3 as revenue, -- *3 - корректировка обезличенных данных
+        sum(for_pay) * 3 as for_pay, -- *3 - корректировка обезличенных данных
         sum(cost_price) as cost_price
     from merge_cost_price
     group by sale_dt, barcode, region

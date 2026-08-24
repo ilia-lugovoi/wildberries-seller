@@ -1,8 +1,8 @@
 select
     id::text as id,
 
-    date::timestamp as order_dt,
-    lastchangedate::timestamp as last_change_dt,
+    date::date as order_dt,
+    lastchangedate::date as last_change_dt,
 
     supplierarticle::text as supplier_article,
     techsize::text as tech_size,
