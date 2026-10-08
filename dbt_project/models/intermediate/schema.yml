@@ -1,0 +1,128 @@
+version: 2
+
+models:
+  - name: int_nomenclature
+    description: >
+      Intermediate-модель мастер-справочника номенклатуры.
+      Сохраняет поля исходного справочника и дополняет их размерной группой из
+      таблицы size_mapping. Модель используется как мастер-источник товарных
+      атрибутов в аналитических витринах.
+
+    columns:
+      - name: barcode
+        description: "Штрих-код товара, используемый как основной товарный ключ в аналитических витринах."
+      - name: supplier_article
+        description: "Артикул поставщика."
+      - name: subject
+        description: "Предмет товара."
+      - name: category
+        description: "Категория товара."
+      - name: brand
+        description: "Бренд товара."
+      - name: size
+        description: "Размер товара из исходного справочника."
+      - name: size_group
+        description: "Размерная группа, добавленная через справочник size_mapping."
+      - name: color
+        description: "Цвет товара."
+      - name: orig_country
+        description: "Страна происхождения товара."
+      - name: rec_price
+        description: "Рекомендованная цена товара."
+
+  - name: int_pnl
+    description: >
+      Intermediate-модель финансовых операций продавца.
+      Grain: одна строка исходного финансового отчета на уровне source-row.
+      Модель выполняет типизацию и нормализацию финансовых данных, сохраняет
+      исходный barcode в source_barcode и заменяет отсутствующий в мастер-
+      справочнике barcode на техническое значение UNKNOWN для последующей
+      аналитики. Бизнес-классификация операций выполняется на уровне mart_pnl.
+
+    columns:
+      - name: rrd_id
+        description: "Уникальный идентификатор строки исходного финансового отчета."
+      - name: shk_id
+        description: "Идентификатор операции/товарной единицы из исходного отчета. Используется для сверки и детализации."
+      - name: source_barcode
+        description: "Исходный barcode непосредственно из финансового отчета до нормализации. Может быть NULL."
+      - name: barcode
+        description: >
+          Аналитический товарный ключ. Если исходный barcode отсутствует или
+          не найден в мастер-справочнике номенклатуры, значение заменяется на UNKNOWN.
+      - name: doc_type_name
+        description: "Тип документа из исходного финансового отчета: Продажа или Возврат."
+      - name: supplier_oper_name
+        description: "Тип финансовой операции поставщика/маркетплейса. Используется для бизнес-классификации в mart_pnl."
+      - name: operation_date
+        description: "Дата финансовой операции, используемая как основная дата для P&L."
+      - name: order_dt
+        description: "Дата заказа из исходного отчета."
+      - name: sale_dt
+        description: "Дата фактической продажи/реализации из исходного отчета."
+      - name: quantity
+        description: "Количество единиц товара в строке исходного отчета."
+      - name: return_amount
+        description: "Количество возвращенных единиц в строке исходного отчета."
+      - name: retail_price
+        description: "Розничная цена до применения скидки в исходном отчете."
+      - name: sale_percent
+        description: "Процент/коэффициент, используемый в расчете цены продажи со скидкой."
+      - name: retail_price_withdisc_rub
+        description: "Цена товара с учетом скидки в рублях."
+      - name: commission_percent
+        description: "Процент комиссии, связанный с расчетом ppvz_for_pay."
+      - name: ppvz_for_pay
+        description: "Сумма к выплате по строке финансового отчета после применяемых WB удержаний согласно источнику."
+      - name: ppvz_sales_commission
+        description: "Комиссионная составляющая по строке финансового отчета."
+      - name: ppvz_vw
+        description: "Компонент вознаграждения WB из финансового отчета."
+      - name: ppvz_reward
+        description: "Компонент вознаграждения/расчета WB из финансового отчета."
+      - name: ppvz_vw_nds
+        description: "НДС в составе показателей вознаграждения WB."
+      - name: delivery_rub
+        description: "Стоимость логистики в рублях."
+      - name: gi_id
+        description: "Идентификатор группировки GI из исходного отчета. Не используется как товарный ключ."
+      - name: gi_box_type_name
+        description: "Тип упаковки/группировки GI из исходного отчета."
+      - name: bonus_type_name
+        description: "Тип бонуса/доплаты из исходного финансового отчета."
+      - name: penalty
+        description: "Сумма штрафа в строке финансового отчета."
+      - name: additional_payment
+        description: "Дополнительная выплата/корректировка из исходного отчета."
+      - name: realizationreport_id
+        description: "Идентификатор/номер отчета реализации."
+      - name: rid
+        description: "Идентификатор группировки операции из исходного отчета."
+      - name: srid
+        description: "Идентификатор SRID из исходного отчета."
+      - name: nm_id
+        description: "Идентификатор номенклатуры из исходного финансового отчета. Сохраняется для source lineage и сверки."
+      - name: sa_name
+        description: "Наименование/артикул из исходного финансового отчета."
+      - name: load_date
+        description: "Техническая дата загрузки/формирования записи, не используется как дата бизнес-события P&L."
+      - name: report_date_from
+        description: "Начало отчетного периода исходного финансового отчета."
+      - name: report_date_to
+        description: "Конец отчетного периода исходного финансового отчета."
+      - name: delivery_amount
+        description: "Количество/параметр доставки из исходного отчета."
+      - name: stock_name
+        description: "Склад/офис, связанный со строкой финансового отчета."
+      - name: site_country
+        description: "Страна/рынок площадки из исходного отчета."
+      - name: ppvz_office_id
+        description: "Идентификатор офиса/пункта из исходного отчета."
+      - name: supplier_promo
+        description: "Размер/параметр промо поставщика из исходного отчета."
+      - name: ppvz_spp_prc
+        description: "Параметр скидки/процента SPP из исходного отчета."
+      - name: ppvz_kvw_prc_base
+        description: "Базовый параметр комиссии KVW из исходного отчета."
+      - name: ppvz_kvw_prc
+        description: "Параметр комиссии KVW из исходного отчета."
