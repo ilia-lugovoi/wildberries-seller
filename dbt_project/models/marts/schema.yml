@@ -3,65 +3,306 @@ version: 2
 models:
   - name: mart_sales_daily
     description: >
-      Ежедневная аналитическая витрина по продажам.
-      Grain витрины: один товар, один день продажи и один регион.
-      Используется для операционного отчета по продажам.
+      Ежедневная аналитическая витрина продаж.
+      Grain: один товар, один день продажи и один регион.
+      Используется в операционном отчете по продажам.
 
     columns:
-
       - name: sale_dt
         description: "Дата продажи."
-
       - name: barcode
         description: "Штрих-код товара."
-
       - name: region
         description: "Регион продажи."
-
-      - name: sales_count
-        description: "Количество строк продаж."
-
       - name: sales_quantity
-        description: "Количество проданных единиц с учетом возвратов."
-
+        description: "Количество проданных единиц с учетом логики возвратов и корректировок исходных продаж."
       - name: revenue
         description: "Сумма фактических цен продажи клиенту."
-
-      - name: avg_sale_price
-        description: "Средняя сумма продажи на одну строку продажи."
-
-      - name: avg_unit_price
-        description: "Средняя сумма продажи на одну единицу товара."
-
-      - name: rec_price
-        description: "Рекомендованная цена товара из справочника номенклатуры."
-
+      - name: rec_revenue
+        description: "Расчетная выручка по рекомендованной цене: rec_price × sales_quantity."
       - name: for_pay
-        description: "Выручка после вычета базовых комиссий."
-
+        description: "Сумма к выплате по данным продаж после применяемых удержаний."
       - name: cost_price
-        description: "Себестоимость проданных товаров с учетом возвратов."
-
+        description: "Суммарная себестоимость проданных товаров с учетом возвратов."
       - name: gross_profit
-        description: "Валовая прибыль: for_pay минус себестоимость."
-
+        description: "Валовая прибыль в контуре продаж: for_pay минус cost_price."
       - name: supplier_article
-        description: "Артикул поставщика."
-
+        description: "Артикул поставщика из мастер-справочника номенклатуры."
       - name: subject
         description: "Предмет товара."
-
       - name: category
         description: "Категория товара."
-
       - name: brand
         description: "Бренд товара."
+      - name: size
+        description: "Размер товара."
+      - name: size_group
+        description: "Размерная группа товара."
+      - name: color
+        description: "Цвет товара."
+      - name: orig_country
+        description: "Страна происхождения товара."
 
+  - name: mart_warehouse_inventory_daily
+    description: >
+      Ежедневная витрина складских остатков.
+      Grain: один день snapshot, один товар и один склад.
+      Содержит остатки, товары в пути и их оценочную стоимость по себестоимости.
+
+    columns:
+      - name: last_change_date
+        description: "Дата snapshot складского остатка."
+      - name: barcode
+        description: "Штрих-код товара."
+      - name: warehouse_name
+        description: "Склад."
+      - name: available_stock
+        description: "Доступный остаток на складе, шт."
+      - name: in_way_to_client
+        description: "Количество товара в пути к клиенту, шт."
+      - name: in_way_from_client
+        description: "Количество товара в пути от клиента, шт."
+      - name: total_stock
+        description: "Общий запас: available_stock + in_way_to_client + in_way_from_client."
+      - name: cost_price
+        description: "Себестоимость единицы товара из справочника себестоимости."
+      - name: available_stock_cost
+        description: "Оценочная стоимость доступного остатка по себестоимости."
+      - name: in_way_to_client_cost
+        description: "Оценочная стоимость товара в пути к клиенту по себестоимости."
+      - name: in_way_from_client_cost
+        description: "Оценочная стоимость товара в пути от клиента по себестоимости."
+      - name: total_stock_cost
+        description: "Оценочная стоимость общего запаса по себестоимости."
+      - name: is_cost_price_missing
+        description: "Флаг отсутствия себестоимости: 1 — себестоимость не найдена, 0 — доступна."
+      - name: category
+        description: "Категория товара из мастер-справочника."
+      - name: subject
+        description: "Предмет товара из мастер-справочника."
+      - name: supplier_article
+        description: "Артикул поставщика."
+      - name: brand
+        description: "Бренд товара."
+      - name: orig_country
+        description: "Страна происхождения товара."
+      - name: color
+        description: "Цвет товара."
+      - name: size_group
+        description: "Размерная группа товара."
       - name: size
         description: "Размер товара."
 
-      - name: color
-        description: "Цвет товара."
+  - name: mart_sales_for_inventory
+    description: >
+      Промежуточная аналитическая витрина продаж для сопоставления с snapshots
+      складских остатков. Grain: один день продажи и один товар.
 
+    columns:
+      - name: sale_dt
+        description: "Дата продажи."
+      - name: barcode
+        description: "Штрих-код товара."
+      - name: sales_quantity
+        description: "Количество проданных единиц за день."
+      - name: revenue
+        description: "Выручка за день по данным продаж."
+      - name: for_pay
+        description: "Сумма к выплате за день по данным продаж."
+      - name: cost_price
+        description: "Суммарная себестоимость проданных товаров за день."
+      - name: gross_profit
+        description: "Валовая прибыль по данным продаж."
+      - name: is_stock_missing
+        description: "Флаг отсутствия соответствующего складского snapshot для продажи: 1 — snapshot не найден, 0 — найден."
+
+  - name: mart_inventory_with_sales_daily
+    description: >
+      Финальная ежедневная витрина для совместного анализа запасов и продаж.
+      Grain: один товар и одна дата состояния запаса / периода между snapshots.
+      Для каждого snapshot сопоставляются продажи, произошедшие до следующего
+      snapshot; продажи, которые нельзя сопоставить с snapshot, добавляются
+      отдельными строками с is_stock_missing = 1.
+
+    columns:
+      - name: last_change_date
+        description: "Дата snapshot складского остатка или дата продажи для записей без подходящего snapshot."
+      - name: barcode
+        description: "Штрих-код товара."
+      - name: available_stock
+        description: "Доступный остаток, шт."
+      - name: in_way_to_client
+        description: "Количество товара в пути к клиенту, шт."
+      - name: in_way_from_client
+        description: "Количество товара в пути от клиента, шт."
+      - name: total_stock
+        description: "Общий запас товара, шт."
+      - name: available_stock_cost
+        description: "Стоимость доступного остатка по себестоимости."
+      - name: in_way_to_client_cost
+        description: "Стоимость товара в пути к клиенту по себестоимости."
+      - name: in_way_from_client_cost
+        description: "Стоимость товара в пути от клиента по себестоимости."
+      - name: total_stock_cost
+        description: "Стоимость общего запаса по себестоимости."
+      - name: sales_quantity
+        description: "Продажи, отнесенные к snapshot/интервалу."
+      - name: revenue
+        description: "Выручка продаж, отнесенных к snapshot/интервалу."
+      - name: for_pay
+        description: "Сумма к выплате по продажам, отнесенным к snapshot/интервалу."
+      - name: sales_cost_price
+        description: "Суммарная себестоимость продаж, отнесенных к snapshot/интервалу."
+      - name: gross_profit
+        description: "Валовая прибыль продаж, отнесенных к snapshot/интервалу."
+      - name: cost_price
+        description: "Себестоимость единицы товара из справочника себестоимости."
+      - name: is_cost_price_missing
+        description: "Флаг отсутствия себестоимости: 1 — себестоимость не найдена, 0 — доступна."
+      - name: is_stock_missing
+        description: "Флаг отсутствия складского snapshot для записи."
+      - name: category
+        description: "Категория товара."
+      - name: subject
+        description: "Предмет товара."
+      - name: supplier_article
+        description: "Артикул поставщика."
+      - name: brand
+        description: "Бренд товара."
       - name: orig_country
         description: "Страна происхождения товара."
+      - name: color
+        description: "Цвет товара."
+      - name: size_group
+        description: "Размерная группа товара."
+      - name: size
+        description: "Размер товара."
+
+  - name: mart_pnl
+    description: >
+      Управленческая финансовая витрина продавца.
+      Grain: одна дата операции, один товар и один склад/офис.
+      Содержит показатели продаж и возвратов, сумму к выплате, комиссию WB,
+      логистику, штрафы, себестоимость, Gross Profit и Marketplace Contribution.
+      Финансовые операции, для которых товарный barcode не разрешается в мастер-
+      справочнике, агрегируются под техническим значением UNKNOWN.
+
+    columns:
+      - name: operation_date
+        description: "Дата финансовой операции."
+      - name: barcode
+        description: "Нормализованный товарный ключ из int_pnl; UNKNOWN используется для неразрешимых barcode."
+      - name: stock_name
+        description: "Склад/офис финансовой операции."
+      - name: sales_qty
+        description: "Количество единиц по продажным операциям."
+      - name: return_qty
+        description: "Количество единиц по возвратным операциям."
+      - name: net_sales_qty
+        description: "Чистое количество продаж: sales_qty − return_qty."
+      - name: sales_retail_price_withdisc_rub
+        description: "Сумма retail_price_withdisc_rub по продажным операциям."
+      - name: return_retail_price_withdisc_rub
+        description: "Сумма retail_price_withdisc_rub по возвратным операциям."
+      - name: net_retail_price_withdisc_rub
+        description: "Чистая сумма retail_price_withdisc_rub: продажи минус возвраты."
+      - name: sales_for_pay
+        description: "Сумма ppvz_for_pay по продажным операциям."
+      - name: return_for_pay
+        description: "Сумма ppvz_for_pay по возвратным операциям."
+      - name: net_for_pay
+        description: "Чистая сумма к выплате: sales_for_pay − return_for_pay."
+      - name: cogs
+        description: "Себестоимость реализованного чистого количества: cost_price × net_sales_qty."
+      - name: is_cogs_available
+        description: "Флаг доступности себестоимости: true — себестоимость найдена, false — отсутствует."
+      - name: wb_commission
+        description: "Комиссия WB для продажных и возвратных операций в рамках P&L."
+      - name: net_logistics
+        description: "Чистые расходы на логистику с учетом сторно: logistics_expense − logistics_storno."
+      - name: penalties
+        description: "Сумма штрафов и связанных удержаний, отнесенных к P&L."
+      - name: gross_profit
+        description: "Gross Profit в управленческой модели: net_for_pay − cogs."
+      - name: marketplace_contribution
+        description: >
+          Marketplace Contribution: Gross Profit после вычета комиссии WB,
+          чистой логистики и штрафов. Используется для оценки рентабельности
+          продаж на уровне маркетплейса.
+      - name: supplier_article
+        description: "Артикул поставщика из мастер-справочника."
+      - name: subject
+        description: "Предмет товара."
+      - name: category
+        description: "Категория товара."
+      - name: brand
+        description: "Бренд товара."
+      - name: size
+        description: "Размер товара."
+      - name: size_group
+        description: "Размерная группа товара."
+      - name: color
+        description: "Цвет товара."
+      - name: orig_country
+        description: "Страна происхождения товара."
+      - name: rec_price
+        description: "Рекомендованная цена товара из мастер-справочника."
+
+  - name: dim_change_date
+    description: >
+      Календарная и служебная таблица дат для анализа складских snapshots.
+      Содержит календарные атрибуты, признаки валидности snapshot и ссылки
+      на предыдущие валидные snapshots для дневного, недельного, месячного
+      и квартального сравнения.
+
+    columns:
+      - name: last_change_date
+        description: "Дата snapshot."
+      - name: rows_count
+        description: "Количество строк snapshot за дату."
+      - name: barcodes_count
+        description: "Количество уникальных barcode в snapshot."
+      - name: warehouses_count
+        description: "Количество складов в snapshot."
+      - name: total_stock
+        description: "Общий объем запасов в snapshot."
+      - name: is_valid_snapshot
+        description: "Признак валидности snapshot: 1 — используется, 0 — исключен из расчетов."
+      - name: year
+        description: "Год даты snapshot."
+      - name: week_start_date
+        description: "Дата начала календарной недели."
+      - name: week
+        description: "Отображаемая календарная неделя в формате DD.MM."
+      - name: month_year
+        description: "Месяц и год snapshot."
+      - name: month_start_date
+        description: "Дата начала месяца."
+      - name: month_number
+        description: "Номер месяца."
+      - name: quarter_start_date
+        description: "Дата начала квартала."
+      - name: quarter_number
+        description: "Номер квартала."
+      - name: quarter
+        description: "Квартал и год в формате QN YYYY."
+      - name: day
+        description: "Номер дня месяца."
+      - name: day_month
+        description: "Отображаемая дата в формате DD.MM."
+      - name: previous_day_snapshot_date
+        description: "Предыдущая валидная дата snapshot."
+      - name: previous_week_snapshot_date
+        description: "Последний валидный snapshot в предыдущей календарной неделе."
+      - name: previous_month_snapshot_date
+        description: "Последний валидный snapshot в предыдущем календарном месяце."
+      - name: previous_quarter_snapshot_date
+        description: "Последний валидный snapshot в предыдущем календарном квартале."
+      - name: date_code
+        description: "Числовой код даты YYYYMMDD."
+      - name: week_code
+        description: "Числовой код начала недели YYYYMMDD."
+      - name: month_code
+        description: "Числовой код месяца YYYYMM."
+      - name: quarter_code
+        description: "Числовой код квартала: YYYY × 10 + номер квартала."

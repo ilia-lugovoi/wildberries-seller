@@ -7,12 +7,14 @@ with sales as (
         case
             when is_realization = false then 0
             when finished_price < 0 then -1
+            when finished_price > 0 and quantity is null then 1
             else quantity
         end as quantity,
         finished_price,
         for_pay
     from {{ ref('stg_sales') }}
     where sale_dt > '2021-12-28' -- В этот день и месяц была проведена только одна и тестовая продажа с возвратом, а с января 22 года начались реальные продажи
+        and od_id <> 150325121583 -- тестовый возврат
 
 ),
 
@@ -26,7 +28,7 @@ merge_cost_price as (
     select
         s.*,
         case
-            when s.finished_price < 0 then -c.cost_price
+            when s.finished_price < 0 then 0
             else c.cost_price
         end as cost_price
     from sales s
@@ -39,10 +41,9 @@ sales_agg as (
         sale_dt,
         barcode,
         region,
-        count(*) as sales_count,
         coalesce(sum(quantity), count(*)) as sales_quantity,
-        sum(finished_price) * 3 as revenue, -- *3 - корректировка обезличенных данных
-        sum(for_pay) * 3 as for_pay, -- *3 - корректировка обезличенных данных
+        sum(finished_price) * 3.5 as revenue, -- *3.5 - корректировка обезличенных данных
+        sum(for_pay) * 3.5 as for_pay, -- *3.5 - корректировка обезличенных данных
         sum(cost_price) as cost_price
     from merge_cost_price
     group by sale_dt, barcode, region
@@ -76,10 +77,9 @@ select
     sale_dt,
     barcode,
     region,
-    sales_count,
     sales_quantity,
     revenue,
-    rec_price,
+    rec_price * sales_quantity as rec_revenue,
     for_pay,
     cost_price,
     for_pay - cost_price as gross_profit,

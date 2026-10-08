@@ -44,3 +44,28 @@ models:
 
       - name: subject
         description: "Предмет товара."
+
+  - name: stg_report
+    columns:
+
+      - name: source_id
+        tests:
+          - unique
+          - not_null
+
+      - name: rrd_id
+        tests:
+          - unique
+          - not_null
+
+      - name: nm_id
+        tests:
+          - not_null
+
+      - name: supplier_oper_name
+        tests:
+          - not_null
+
+      - name: operation_at
+        tests:
+          - not_null
