@@ -35,3 +35,4 @@ logs/
 raw_sources/*
 !raw_sources/.gitkeep
 !raw_sources/README.md
+exports/
