@@ -5,7 +5,7 @@ select
     brand,
 
     case
-        when barcode is null then '2000939535947'::text
+        when barcode is null and supplierarticle = 'supplierArticle 97' then '2000939535947'::text
         else barcode::text
     end as barcode,
 
